@@ -10,7 +10,8 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepository {
+public class UserRepository implements iRepository {
+
     private final JdbcTemplate jdbcTemplate;
 
     public List<User> findAll() {

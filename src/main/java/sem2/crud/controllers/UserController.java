@@ -16,6 +16,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+    /**
+     * полуить список всех пользователей в БД
+     *
+     * @param model модель для шаблонизатора
+     * @return - страница со списком пользователей
+     */
     @GetMapping("/users")
     public String findAll(Model model) {
         List<User> users = userService.findAll();
@@ -23,20 +30,37 @@ public class UserController {
         return "user-list";
     }
 
-
+    /**
+     * получить форму создания нового пользователя
+     *
+     * @param user
+     * @return страница создания пользователя
+     */
     @GetMapping("/user-create")
     public String createUserForm(User user) {
         return "user-create";
     }
 
 
+    /**
+     * создать нового пользователя в бд
+     *
+     * @param user
+     * @return - перенаправляет на страницу со списком пользователей
+     */
     @PostMapping("/user-create")
     public String createUser(User user) {
         userService.saveUser(user);
         return "redirect:/users";
     }
 
-
+    /**
+     * получить форму для обновления данных пользователя
+     *
+     * @param id    - id пользователя
+     * @param model модель для шаблонизатора
+     * @return
+     */
     @GetMapping("/user-update/{id}")
     public String updateGet(@PathVariable("id") int id, Model model) {
         User user = userService.findUserById(id);
@@ -45,6 +69,12 @@ public class UserController {
     }
 
 
+    /**
+     * обновить данные пользователя в БД
+     *
+     * @param user - пользователь
+     * @return - перенаправляет на страницу со списком пользователей
+     */
     @PostMapping("/user-update")
     public String updateUser(User user) {
         userService.update(user);
@@ -52,6 +82,12 @@ public class UserController {
     }
 
 
+    /**
+     * Удалить пользователя из БД
+     *
+     * @param id -id пользователя
+     * @return - перенаправляет на страницу со списком пользователей
+     */
     @GetMapping("/user-delete/{id}")
     public String deleteUser(@PathVariable("id") int id) {
         userService.delete(id);
