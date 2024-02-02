@@ -18,6 +18,11 @@ public class UserService {
     }
 
 
+    public User findUserById(int id) {
+        return repository.findUserById(id);
+    }
+
+
     public User saveUser(User user) {
         return repository.save(user);
     }

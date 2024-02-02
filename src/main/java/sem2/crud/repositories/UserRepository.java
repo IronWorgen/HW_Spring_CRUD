@@ -25,6 +25,18 @@ public class UserRepository {
         return jdbcTemplate.query(sql, userRowMapper);
     }
 
+    public User findUserById(int id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        RowMapper<User> userRowMapper = (r, i) -> {
+            User rowObject = new User();
+            rowObject.setId(r.getInt("id"));
+            rowObject.setFirstName(r.getString("firstName"));
+            rowObject.setLastName(r.getString("lastName"));
+            return rowObject;
+        };
+        return jdbcTemplate.queryForObject(sql, userRowMapper, id);
+    }
+
 
     public User save(User user) {
         String sql = "INSERT INTO users (firstName, lastname) values(?, ?)";

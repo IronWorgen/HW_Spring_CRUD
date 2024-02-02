@@ -1,7 +1,6 @@
 package sem2.crud.controllers;
 
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import sem2.crud.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,7 +38,9 @@ public class UserController {
 
 
     @GetMapping("/user-update/{id}")
-    public String updateGet(User user) {
+    public String updateGet(@PathVariable("id") int id, Model model) {
+        User user = userService.findUserById(id);
+        model.addAttribute(user);
         return "user-update";
     }
 
