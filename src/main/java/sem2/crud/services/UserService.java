@@ -2,6 +2,8 @@ package sem2.crud.services;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import sem2.crud.configs.ApplicationConfig;
 import sem2.crud.model.User;
 import org.springframework.stereotype.Service;
 import sem2.crud.repositories.ArchiveRepository;
@@ -13,6 +15,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    @Autowired
+    private ApplicationConfig applicationConfig;
     /**
      * репозиторий H2
      */
@@ -41,7 +45,9 @@ public class UserService {
      * @return - user
      */
     public User saveUser(User user) {
-        //archiveRepository.saveUser(user);
+        if(applicationConfig.isEnableArchiveDB()){
+            archiveRepository.saveUser(user);
+        }
         return userRepository.save(user);
     }
 

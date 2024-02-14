@@ -1,6 +1,7 @@
 package sem2.crud.repositories;
 
 import lombok.RequiredArgsConstructor;
+import sem2.crud.configs.DbUsersQuery;
 import sem2.crud.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,9 +14,10 @@ import java.util.List;
 public class UserRepository implements iRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final DbUsersQuery dbUsersQuery;
 
     public List<User> findAll() {
-        String sql = "SELECT * FROM users";
+        String sql = dbUsersQuery.getFindAll();
         RowMapper<User> userRowMapper = (r, i) -> {
             User rowObject = new User();
             rowObject.setId(r.getInt("id"));
@@ -27,7 +29,7 @@ public class UserRepository implements iRepository {
     }
 
     public User findUserById(int id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
+        String sql = dbUsersQuery.getFindUserById();
         RowMapper<User> userRowMapper = (r, i) -> {
             User rowObject = new User();
             rowObject.setId(r.getInt("id"));
@@ -40,14 +42,14 @@ public class UserRepository implements iRepository {
 
 
     public User save(User user) {
-        String sql = "INSERT INTO users (firstName, lastname) values(?, ?)";
+        String sql = dbUsersQuery.getSave();
         jdbcTemplate.update(sql, user.getFirstName(), user.getLastName());
         return user;
     }
 
 
     public void update(User user) {
-        String sql = "UPDATE users set firstName = ?, lastName = ? WHERE id = ?";
+        String sql = dbUsersQuery.getUpdate();
         jdbcTemplate.update(sql, user.getFirstName(), user.getLastName(), user.getId());
     }
 

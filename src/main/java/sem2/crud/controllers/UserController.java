@@ -1,5 +1,6 @@
 package sem2.crud.controllers;
 
+import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.PathVariable;
 import sem2.crud.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import sem2.crud.services.UserService;
 import java.util.List;
 
 @Controller
+@Log
 public class UserController {
     @Autowired
     private UserService userService;
@@ -26,7 +28,10 @@ public class UserController {
     @GetMapping("/users")
     public String findAll(Model model) {
         List<User> users = userService.findAll();
+        System.out.println();
         model.addAttribute("users", users);
+
+        log.info("выведен список пользователей");
         return "user-list";
     }
 
@@ -51,6 +56,7 @@ public class UserController {
     @PostMapping("/user-create")
     public String createUser(User user) {
         userService.saveUser(user);
+        log.info("добавлен пользователь:"+user);
         return "redirect:/users";
     }
 
@@ -78,6 +84,7 @@ public class UserController {
     @PostMapping("/user-update")
     public String updateUser(User user) {
         userService.update(user);
+        log.info("данные пользователя "+user+ " изменены");
         return "redirect:/users";
     }
 
@@ -91,6 +98,7 @@ public class UserController {
     @GetMapping("/user-delete/{id}")
     public String deleteUser(@PathVariable("id") int id) {
         userService.delete(id);
+        log.info("пользователь id="+id+ " удален");
         return "redirect:/users";
     }
 }

@@ -1,11 +1,14 @@
 package sem2.crud.repositories;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import org.springframework.stereotype.Repository;
+import sem2.crud.configs.DbArchiveQuery;
+import sem2.crud.configs.DbUsersQuery;
 import sem2.crud.model.User;
 
 import javax.sql.DataSource;
@@ -20,14 +23,16 @@ public class ArchiveRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ArchiveRepository() {
+    private  final DbArchiveQuery dbArchiveQuery;
 
+    public ArchiveRepository(@Autowired DbArchiveQuery dbArchiveQuery) {
         DataSource dataSource = DataSourceBuilder.create().username("root")
                 .password("password")
                 .url("jdbc:mysql://localhost:8086/Users")
                 .driverClassName("com.mysql.cj.jdbc.Driver")
                 .build();
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.dbArchiveQuery = dbArchiveQuery;
     }
 
     /**
@@ -36,7 +41,7 @@ public class ArchiveRepository {
      * @param user - пользователь
      */
     public void saveUser(User user) {
-        String sql = "INSERT INTO users (firstName, lastname) values(?, ?)";
+        String sql = dbArchiveQuery.getSaveUser();
         try {
             jdbcTemplate.update(sql, user.getFirstName(), user.getLastName());
         } catch (RuntimeException e) {
@@ -54,11 +59,7 @@ public class ArchiveRepository {
      * если в базе данных нет таблицы `users` создать ее
      */
     private void createTableUsers() {
-        String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                "    id INT AUTO_INCREMENT PRIMARY KEY," +
-                "    firstName varchar(50) NOT NULL," +
-                "    lastName varchar(50) NOT NULL" +
-                ");";
+        String sql = dbArchiveQuery.getCreateTableUsers();
         jdbcTemplate.update(sql);
     }
 }
